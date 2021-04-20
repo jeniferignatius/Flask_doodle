@@ -24,7 +24,7 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    #DB_NAME = 'test1'
+    #DB_NAME = 'flask'
     #DB_USERNAME = 'root'
     #DB_PASSWORD = ''
     #DB_URL = 'mysql://'+ DB_USERNAME + ':'+ DB_PASSWORD + '@localhost/' + DB_NAME

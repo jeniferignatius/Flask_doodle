@@ -197,3 +197,16 @@ login_manager.anonymous_user = AnonymousUser
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+
+class Contact(db.Model):
+    __tablename__ = 'contact'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(140),unique=True, index=True)
+    email = db.Column(db.String(140),unique=True, index=True)
+    phone = db.Column(db.Integer)
+    message = db.Column(db.Text())
+   
+
+    def __repr__(self):
+        return '<Contact {}>'.format(self.body)

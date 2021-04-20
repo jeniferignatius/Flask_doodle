@@ -1,15 +1,30 @@
 from flask import render_template, redirect, url_for, abort, flash
 from flask_login import login_required, current_user
 from . import main
-from .forms import EditProfileForm, EditProfileAdminForm
+from .forms import EditProfileForm, EditProfileAdminForm, ContactForm
 from .. import db
-from ..models import Role, User
+from ..models import Role, User, Contact
 from ..decorators import admin_required
 
 
 @main.route('/')
 def index():
     return render_template('index.html')
+
+@main.route('/contact', methods=['GET', 'POST'])
+def contact():
+    form = ContactForm()
+    if form.validate_on_submit():
+        name = form.name.data
+        email = form.email.data
+        phone = form.phone.data
+        message = form.message.data
+        my_data = Contact(name=name, email=email, phone=phone,message=message)
+        db.session.add(my_data)
+        db.session.commit()
+        flash('Thank you for contacting us.')
+        return redirect(url_for('main.index'))
+    return render_template('contact.html', form=form)
 
 
 @main.route('/user/<username>')
