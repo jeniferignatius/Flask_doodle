@@ -27,6 +27,7 @@ def contact():
     return render_template('contact.html', form=form)
 
 @main.route('/meetup', methods=['GET', 'POST'])
+@login_required
 def meetup():
     form = MeetupForm()
     if form.validate_on_submit():
@@ -36,7 +37,7 @@ def meetup():
         my_data = Meetup(name=name, location=location, note=note)
         db.session.add(my_data)
         db.session.commit()
-        flash('you have created the meeting.')
+        flash('continue to next section...')
         return redirect(url_for('main.index'))
     return render_template('meetup.html', form=form)
 

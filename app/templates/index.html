@@ -4,7 +4,25 @@
 
 {% block page_content %}
 <div class="page-header">
-    <h1>Hello, {% if current_user.is_authenticated %}{{ current_user.username }}{% else %}Stranger{% endif %}!</h1>
-    <h2><a href="{{ url_for('main.meetup') }}">Create Meetup</a></h2>
+    <div class="row">
+        <div class="col-md-7">
+            <img src="{{url_for('static', filename='img1.jpeg')}}" align="" width="100%" height="auto" />
+        </div>
+        <div class="col-md-5">
+          <h1 class="logo"><b>MEETUP</b></h1></br></br>
+          <div class="mes">
+          <h2>Hello, {% if current_user.is_authenticated %}{{ current_user.username }}{% else %}Stranger{% endif %}!</h2>
+          <h2>Arrange meeting with your friends,</h2>
+          <h2>collegues or family members</h2>
+          <h2>and</h2>
+          <h2>decide together what to do</h2></br>
+          <h2><a href="{{ url_for('main.meetup') }}">Create Meetup</a></h2>
+          </div>
+        </div>
+    </div>
 </div>
+
+{% block page_footer %}
+<footer>&copy; 2021 Meetup, Inc.</footer>
+{% endblock %}
 {% endblock %}

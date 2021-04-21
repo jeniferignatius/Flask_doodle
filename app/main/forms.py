@@ -21,7 +21,7 @@ class MeetupForm(FlaskForm):
     name = StringField('Family Meeting', validators=[DataRequired()])
     location = StringField('Location', validators=[DataRequired()])
     note = TextAreaField('note')
-    submit = SubmitField('Submit')
+    submit = SubmitField('Next')
 
 
 class EditProfileForm(FlaskForm):
