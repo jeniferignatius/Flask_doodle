@@ -28,7 +28,7 @@ class DevelopmentConfig(Config):
     #DB_USERNAME = 'root'
     #DB_PASSWORD = ''
     #DB_URL = 'mysql://'+ DB_USERNAME + ':'+ DB_PASSWORD + '@localhost/' + DB_NAME
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or 'mysql+pymysql://root:''@localhost/test1'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or 'mysql+pymysql://root:''@localhost/flask'
     # or \
         #'sqlite:test1///' + os.path.join(basedir, 'data-dev.sqlite')
 

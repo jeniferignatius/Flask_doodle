@@ -210,3 +210,15 @@ class Contact(db.Model):
 
     def __repr__(self):
         return '<Contact {}>'.format(self.body)
+
+
+class Meetup(db.Model):
+    __tablename__ = 'meetup'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(140),unique=True, index=True)
+    location = db.Column(db.String(140),unique=True, index=True)
+    note = db.Column(db.Text())
+   
+
+    def __repr__(self):
+        return '<Meetup {}>'.format(self.body)

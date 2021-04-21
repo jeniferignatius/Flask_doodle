@@ -3,7 +3,7 @@ from wtforms import StringField, TextAreaField, BooleanField, SelectField,\
     SubmitField
 from wtforms.validators import DataRequired, Length, Email, Regexp
 from wtforms import ValidationError
-from ..models import Role, User, Contact
+from ..models import Role, User, Contact, Meetup
 
 
 class NameForm(FlaskForm):
@@ -15,6 +15,12 @@ class ContactForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Length(1, 64), Email()])
     phone = StringField('Phone', validators=[DataRequired()])
     message = TextAreaField('message')
+    submit = SubmitField('Submit')
+
+class MeetupForm(FlaskForm):
+    name = StringField('Family Meeting', validators=[DataRequired()])
+    location = StringField('Location', validators=[DataRequired()])
+    note = TextAreaField('note')
     submit = SubmitField('Submit')
 
 

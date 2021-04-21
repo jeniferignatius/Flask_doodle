@@ -1,9 +1,9 @@
 from flask import render_template, redirect, url_for, abort, flash
 from flask_login import login_required, current_user
 from . import main
-from .forms import EditProfileForm, EditProfileAdminForm, ContactForm
+from .forms import EditProfileForm, EditProfileAdminForm, ContactForm, MeetupForm
 from .. import db
-from ..models import Role, User, Contact
+from ..models import Role, User, Contact,Meetup
 from ..decorators import admin_required
 
 
@@ -25,6 +25,20 @@ def contact():
         flash('Thank you for contacting us.')
         return redirect(url_for('main.index'))
     return render_template('contact.html', form=form)
+
+@main.route('/meetup', methods=['GET', 'POST'])
+def meetup():
+    form = MeetupForm()
+    if form.validate_on_submit():
+        name = form.name.data
+        location = form.location.data
+        note = form.note.data
+        my_data = Meetup(name=name, location=location, note=note)
+        db.session.add(my_data)
+        db.session.commit()
+        flash('you have created the meeting.')
+        return redirect(url_for('main.index'))
+    return render_template('meetup.html', form=form)
 
 
 @main.route('/user/<username>')
