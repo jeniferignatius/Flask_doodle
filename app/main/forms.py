@@ -1,9 +1,10 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, BooleanField, SelectField,\
+from wtforms import StringField, TextAreaField, BooleanField, SelectField, DateField, \
     SubmitField
 from wtforms.validators import DataRequired, Length, Email, Regexp
 from wtforms import ValidationError
-from ..models import Role, User, Contact, Meetup
+from ..models import Role, User, Contact, Meetup, Invite
+from wtforms.fields.html5 import DateField
 
 
 class NameForm(FlaskForm):
@@ -20,9 +21,21 @@ class ContactForm(FlaskForm):
 class MeetupForm(FlaskForm):
     name = StringField('Family Meeting', validators=[DataRequired()])
     location = StringField('Location', validators=[DataRequired()])
+    startdate = DateField('Start Date', format='%Y-%m-%d', validators=[DataRequired()])
+    enddate = DateField('End Date', format='%Y-%m-%d', validators=[DataRequired()])
     note = TextAreaField('note')
     submit = SubmitField('Next')
 
+class MeetupeditForm(FlaskForm):
+    name = StringField('Family Meeting', validators=[DataRequired()])
+    location = StringField('Location', validators=[DataRequired()])
+    startdate = DateField('Start Date', format='%Y-%m-%d', validators=[DataRequired()])
+    enddate = DateField('End Date', format='%Y-%m-%d', validators=[DataRequired()])
+    note = TextAreaField('note')
+    submit = SubmitField('Edit')
+class SendingForm(FlaskForm):
+    email = StringField('Enter emails', validators=[DataRequired(),Length(1, 64), Email()])
+    submit = SubmitField('Send')
 
 class EditProfileForm(FlaskForm):
     name = StringField('Real name', validators=[Length(0, 64)])

@@ -1,10 +1,11 @@
-from flask import render_template, redirect, url_for, abort, flash
+from flask import render_template, redirect, url_for, abort, flash, jsonify
 from flask_login import login_required, current_user
 from . import main
-from .forms import EditProfileForm, EditProfileAdminForm, ContactForm, MeetupForm
+from .forms import EditProfileForm, EditProfileAdminForm, ContactForm, MeetupForm, SendingForm, MeetupeditForm
 from .. import db
-from ..models import Role, User, Contact,Meetup
+from ..models import Role, User, Contact,Meetup, Invite
 from ..decorators import admin_required
+from ..email import send_email
 
 
 @main.route('/')
@@ -33,13 +34,121 @@ def meetup():
     if form.validate_on_submit():
         name = form.name.data
         location = form.location.data
+        startdate = form.startdate.data
+        enddate = form.enddate.data
         note = form.note.data
-        my_data = Meetup(name=name, location=location, note=note)
-        db.session.add(my_data)
+        my_meetup = Meetup(name=name, location=location, startdate=startdate, enddate=enddate, note=note)
+        db.session.add(my_meetup)
         db.session.commit()
-        flash('continue to next section...')
-        return redirect(url_for('main.index'))
-    return render_template('meetup.html', form=form)
+        flash('Event has created...')
+        return redirect(url_for('main.date'))
+    name = form.name.data
+    my_meetup = Meetup.query.order_by(Meetup.startdate)
+    return render_template('meetup.html', form=form, my_meetup=my_meetup)
+
+@main.route('/date', methods=['GET','POST'])
+@login_required
+def date():
+    form = SendingForm()
+    my_meetup = Meetup.query.all()
+    my_invite = Invite.query.all()
+    my_meetup = Meetup.query.order_by(Meetup.startdate)
+    if form.validate_on_submit():
+        my_invite = Invite(email=form.email.data)
+        my_invite = Invite.query.filter_by(email=form.email.data.lower()).first()
+        #db.session.add(my_invite)
+        db.session.commit()
+        #user = User.query.filter_by(email=form.email.data.lower()).first()
+        if my_invite:
+            #token = user.generate_token()
+            send_email(my_invite.email, 'confirm your event',
+                       'auth/email/invite_participant',
+                       my_invite=my_invite)
+        flash('An email with invite participants '
+              'sent to you.')
+    return render_template('date.html',form=form,my_meetup=my_meetup,my_invite=my_invite)
+
+@main.route('/invite_participant', methods=['GET','POST'])
+@login_required
+def invite_participant():
+    form = SendingForm()
+    my_meetup = Meetup.query.all()
+    my_invite = Invite.query.all()
+    #my_meetup = Meetup.query.order_by(Meetup.startdate)
+    if form.validate_on_submit():
+        my_invite = Invite(email=form.email.data)
+        my_invite = Invite.query.filter_by(email=form.email.data.lower()).first()
+        #db.session.add(my_invite)
+        db.session.commit()
+        #user = User.query.filter_by(email=form.email.data.lower()).first()
+        if my_invite:
+            #token = user.generate_token()
+            send_email(my_invite.email, 'confirm your event',
+                       'auth/email/invite_participant',
+                       my_invite=my_invite)
+        flash('An email with invite participants '
+              'sent to you.')
+    return render_template('date.html',form=form, my_invite=my_invite)
+
+
+
+#this is our update route where we are going to update the event
+@main.route('/edit_event', methods = ['GET', 'POST'])
+@login_required
+def edit_event():
+    #form = MeetupeditForm()
+    my_data = Meetup.query.get_or_404(id)
+    if request.method == 'POST':
+        my_data= Meetup.query.get(request.form.get(id))
+        #my_data = Meetup.query.filter_by(name=form.name.data.lower()).first()
+ 
+        my_data.name = request.form['name']
+        my_data.location = request.form['location']
+        my_data.startdate = request.form['startdate']
+        my_data.enddate = request.form['enddate']
+        my_data.note = request.form['note']
+        db.session.add(my_data._get_current_object())
+        db.session.commit()
+        flash("Event Updated Successfully")
+        return redirect(url_for('main.date', name=my_data.name))
+    form.name.data = my_data.name
+    form.location.data = my_data.location
+    form.startdate.data = my_data.startdate
+    form.enddate.data = my_data.enddate
+    form.note.data = my_data.note
+    #return render_template('date.html', form=form,my_data=my_data)
+ 
+ 
+ 
+ 
+#This route is for deleting the event
+@main.route('/delete/<id>/', methods = ['GET', 'POST'])
+def delete(id):
+    my_data = Meetup.query.get(id)
+    db.session.delete(my_data)
+    db.session.commit()
+    flash("Event Deleted Successfully")
+ 
+    return redirect(url_for('main.date'))
+
+@main.route('/calendar-events')
+def calendar_events():
+	conn = None
+	cursor = None
+	try:
+		conn = mysql.connect()
+		cursor = conn.cursor(pymysql.cursors.DictCursor)
+		cursor.execute("SELECT id, title, url, class, UNIX_TIMESTAMP(start_date)*1000 as start, UNIX_TIMESTAMP(end_date)*1000 as end FROM event")
+		rows = cursor.fetchall()
+		resp = jsonify({'success' : 1, 'result' : rows})
+		resp.status_code = 200
+		return resp
+	except Exception as e:
+		print(e)
+	finally:
+		cursor.close() 
+		conn.close()
+    
 
 
 @main.route('/user/<username>')
