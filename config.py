@@ -12,8 +12,8 @@ class Config:
         ['true', 'on', '1']
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-    FLASKY_MAIL_SUBJECT_PREFIX = '[Flasky]'
-    FLASKY_MAIL_SENDER = 'Flasky Admin <flasky@example.com>'
+    FLASKY_MAIL_SUBJECT_PREFIX = '[Meetup]'
+    FLASKY_MAIL_SENDER = 'Meetup Admin <meetup@example.com>'
     FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -28,7 +28,7 @@ class DevelopmentConfig(Config):
     #DB_USERNAME = 'root'
     #DB_PASSWORD = ''
     #DB_URL = 'mysql://'+ DB_USERNAME + ':'+ DB_PASSWORD + '@localhost/' + DB_NAME
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or 'mysql+pymysql://root:''@localhost/test1'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or 'mysql+pymysql://root:''@localhost/flask'
     # or \
         #'sqlite:test1///' + os.path.join(basedir, 'data-dev.sqlite')
 
@@ -49,6 +49,6 @@ config = {
     'development': DevelopmentConfig,
     'testing': TestingConfig,
     'production': ProductionConfig,
-
+    #'heroku': HerokuConfig,
     'default': DevelopmentConfig
 }

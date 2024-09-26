@@ -1,0 +1,7 @@
+<p>Dear {{ my_invite.email }},</p>
+<p>Now that your {{ my_invite.email }} event has created. You can<a href="{{ url_for('main.invite_participant', _external=True) }}">edit it</a>and invite participants.</p>
+<p>{{ url_for('main.invite_participant', token=token, _external=True) }}</p>
+<p>If you have not requested a password reset simply ignore this message.</p>
+<p>Sincerely,</p>
+<p>The Flasky Team</p>
+<p><small>Note: replies to this email address are not monitored.</small></p>

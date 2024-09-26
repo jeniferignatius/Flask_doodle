@@ -19,7 +19,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{{ url_for('main.index') }}">Flasky</a>
+            <a class="navbar-brand" href="{{ url_for('main.index') }}">Meetup</a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
@@ -67,4 +67,7 @@
 {% block scripts %}
 {{ super() }}
 {{ moment.include_moment() }}
+{% block page_footer %}
+<footer>&copy; 2021 Meetup, Inc.</footer>
+{% endblock %}
 {% endblock %}
